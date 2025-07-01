@@ -70,4 +70,57 @@ double calcularIntensidade (string hex)
     return intensidade;
 }
 
+bool ordenarGemasCor (vector<Gema> *vetorDeGemas)
+{
+    if (vetorDeGemas == nullptr)
+    {
+        return false;
+    }
+    sort(vetorDeGemas->begin(), vetorDeGemas->end(), [](const Gema& a, const Gema& b) 
+    {
+        return a.corHex < b.corHex;
+    });
+    return true;
+}
+
+bool ordenarGemasID (vector<Gema> *vetorDeGemas)
+{
+    if (vetorDeGemas == nullptr)
+    {
+        return false;
+    }
+    sort(vetorDeGemas->begin(), vetorDeGemas->end(), [](const Gema& a, const Gema& b)
+    {
+        return a.id < b.id;
+    });
+    return true;
+}
+
+bool ordenarGemasIntensidade (vector<Gema> *vetorDeGemas)
+{
+    if (vetorDeGemas == nullptr)
+    {
+        return false;
+    }
+    sort(vetorDeGemas->begin(), vetorDeGemas->end(), [](const Gema& a, const Gema& b)
+    {
+        return a.intensidade < b.intensidade;
+    });
+    return true;
+}
+
+string gerarCorHexAleatoria() {
+    stringstream ss;
+    ss << "#";
+    for (int i = 0; i < 6; ++i) {
+        int val = std::rand() % 16;
+        if (val < 10) {
+            ss << val;
+        } else {
+            ss << (char)('A' + (val - 10));
+        }
+    }
+    return ss.str();
+}
+
 #endif

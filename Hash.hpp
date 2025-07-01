@@ -4,7 +4,8 @@
 #include <bits/stdc++.h>
 #include "Gema.hpp"
 
-#define HASH_TABLE_SIZE 101
+
+#define HASH_TABLE_SIZE 1428
 
 unsigned int hashfunctionID (int id)
 {
@@ -13,8 +14,11 @@ unsigned int hashfunctionID (int id)
 
 int hashFunctionIntensidade (double intensidade)
 {
-    long long intVal = intensidade * 65537;
-    return intVal % HASH_TABLE_SIZE;
+    double valorNormalizado = (intensidade / 100.0) * 255.0;
+    int indiceDiscreto = static_cast<int>(round(valorNormalizado));
+    if (indiceDiscreto < 0) indiceDiscreto = 0;
+    if (indiceDiscreto > 255) indiceDiscreto = 255;
+    return indiceDiscreto % HASH_TABLE_SIZE;
 }
 
 Gema *hashtableID[HASH_TABLE_SIZE];
@@ -48,24 +52,26 @@ bool inserirNasTabelasHash (Gema *gema)
     return true;
 }
 
-Gema *consultaTabelaHashID (int id)
+Gema *consultaTabelaHashID (int id, int& saltos)
 {
     int index = hashfunctionID(id);
     Gema* atual = hashtableID[index];
     while (atual != nullptr) 
-    {
+    {   
+        saltos++;
         if (atual->id == id) return atual;
         atual = atual->proxID;
     }
     return nullptr;
 }
 
-Gema *consultaTabelaHashIntensidade (double intensidade)
+Gema *consultaTabelaHashIntensidade (double intensidade, int& saltos)
 {
     int index = hashFunctionIntensidade(intensidade);
     Gema * atual = hashtableIntensidade[index];
     while (atual != nullptr)
     {
+        saltos++;
         if (atual->intensidade == intensidade) return atual;
         atual = atual->proxIntensidade;
     }
@@ -112,7 +118,7 @@ bool deletarNasTabelasHash(Gema* gema) {
     return true;
 }
 
-vector<Gema*> consultarTodasTabelaHashID(int id)
+vector<Gema*> consultarTodasTabelaHashID(int id, int& saltos)
 {
     vector<Gema*> resultados;
     int index = hashfunctionID(id);
@@ -120,6 +126,7 @@ vector<Gema*> consultarTodasTabelaHashID(int id)
 
     while (atual != nullptr)
     {
+        saltos++;
         if (atual->id == id)
         {
             resultados.push_back(atual);
@@ -130,7 +137,7 @@ vector<Gema*> consultarTodasTabelaHashID(int id)
     return resultados;
 }
 
-vector<Gema*> consultarTodasTabelaHashIntensidade(double intensidade)
+vector<Gema*> consultarTodasTabelaHashIntensidade(double intensidade, int& saltos)
 {
     vector<Gema*> resultados;
     int index = hashFunctionIntensidade(intensidade);
@@ -138,6 +145,7 @@ vector<Gema*> consultarTodasTabelaHashIntensidade(double intensidade)
 
     while (atual != nullptr)
     {
+        saltos++;
         if (atual->intensidade == intensidade)
         {
             resultados.push_back(atual);
